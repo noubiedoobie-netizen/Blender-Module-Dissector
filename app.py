@@ -11,7 +11,6 @@ FAVICON_PNG = base64.b64decode(
 
 app = Flask(__name__)
 app.secret_key = os.environ.get("FLASK_SECRET_KEY", "change-this-in-production")
-app.config["MAX_CONTENT_LENGTH"] = 50 * 1024 * 1024  # 50MB max upload size
 
 
 @app.route("/favicon.ico")
