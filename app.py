@@ -1,4 +1,5 @@
 import os
+from pathlib import Path
 from flask import Flask, render_template, request, redirect, url_for, flash
 
 app = Flask(__name__)
@@ -26,6 +27,15 @@ def parse_blend_header(stream):
     }
 
 
+def analyze_python_source(source_text: str) -> dict:
+    """Return simple analysis of a Python source file."""
+    return {
+        "lines": len(source_text.splitlines()),
+        "functions": len([_ for _ in source_text.splitlines() if _.strip().startswith("def ")]),
+        "imports": len([_ for _ in source_text.splitlines() if _.strip().startswith("import ") or _.strip().startswith("from ")]),
+    }
+
+
 @app.route("/", methods=["GET"])
 def index():
     return render_template("index.html")
@@ -42,11 +52,38 @@ def upload():
         flash("No file selected.")
         return redirect(url_for("index"))
 
+    ext = Path(file.filename).suffix.lower()
+
     try:
-        metadata = parse_blend_header(file.stream)
+        file.stream.seek(0)
+        if ext == ".blend":
+            metadata = parse_blend_header(file.stream)
+            file_type = "blend"
+            context = {"metadata": metadata}
+
+        elif ext == ".py":
+            content = file.stream.read().decode("utf-8", errors="replace")
+            analysis = analyze_python_source(content)
+            file_type = "python"
+            context = {
+                "analysis": analysis,
+                "preview": content[:2048],
+            }
+
+        else:
+            raise ValueError("Unsupported file type. Please upload a .blend or .py file.")
+
         file.stream.seek(0, os.SEEK_END)
         size_bytes = file.stream.tell()
-        return render_template("result.html", filename=file.filename, size=size_bytes, metadata=metadata)
+
+        return render_template(
+            "result.html",
+            filename=file.filename,
+            size=size_bytes,
+            file_type=file_type,
+            **context,
+        )
+
     except Exception as exc:
         flash(str(exc))
         return redirect(url_for("index"))

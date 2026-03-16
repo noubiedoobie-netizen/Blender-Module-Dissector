@@ -1,11 +1,12 @@
 # Blender-Module-Dissector
 
-A minimal Flask web app for uploading a Blender `.blend` file and inspecting its header metadata (Blender version, pointer size, and endianness).
+A minimal Flask web app for uploading a Blender `.blend` file or a Python `.py` script and inspecting its contents.
 
 ## ✅ What it does
 
-- Accepts a `.blend` upload
-- Parses the Blender file header (magic bytes, pointer size, endianness, and version)
+- Accepts `.blend` or `.py` uploads
+- For `.blend` files: parses the Blender file header (magic bytes, pointer size, endianness, and version)
+- For `.py` files: counts functions, imports, and shows a preview of the source
 - Displays the extracted metadata in a clean UI
 
 ## 🚀 Getting Started

@@ -33,19 +33,40 @@
             <th>Size</th>
             <td>{{ (size / 1024)|round(2) }} KB ({{ size }} bytes)</td>
           </tr>
-          <tr>
-            <th>Blender Version</th>
-            <td>{{ metadata.version }}</td>
-          </tr>
-          <tr>
-            <th>Pointer Size</th>
-            <td>{{ metadata.pointer_size }}</td>
-          </tr>
-          <tr>
-            <th>Endianness</th>
-            <td>{{ metadata.endianness }}</td>
-          </tr>
+
+          {% if file_type == "blend" %}
+            <tr>
+              <th>Blender Version</th>
+              <td>{{ metadata.version }}</td>
+            </tr>
+            <tr>
+              <th>Pointer Size</th>
+              <td>{{ metadata.pointer_size }}</td>
+            </tr>
+            <tr>
+              <th>Endianness</th>
+              <td>{{ metadata.endianness }}</td>
+            </tr>
+          {% elif file_type == "python" %}
+            <tr>
+              <th>Line Count</th>
+              <td>{{ analysis.lines }}</td>
+            </tr>
+            <tr>
+              <th>Function Definitions</th>
+              <td>{{ analysis.functions }}</td>
+            </tr>
+            <tr>
+              <th>Import Statements</th>
+              <td>{{ analysis.imports }}</td>
+            </tr>
+          {% endif %}
         </table>
+
+        {% if file_type == "python" %}
+          <h3>Preview (first 2KB)</h3>
+          <pre style="background: #f6f6f6; padding: 1rem; border-radius: 8px; overflow-x: auto;">{{ preview }}</pre>
+        {% endif %}
 
         <a class="button" href="{{ url_for('index') }}">Inspect another file</a>
       </section>
