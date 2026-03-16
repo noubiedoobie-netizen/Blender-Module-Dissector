@@ -1,0 +1,20 @@
+const fileInput = document.getElementById('your-upload-id');
+
+fileInput.addEventListener('change', (event) => {
+    const file = event.target.files[0];
+    const allowedExtensions = /(\.py|\.blend)$/i;
+
+    if (!file) {
+        console.error("No file selected.");
+        return;
+    }
+
+    if (!allowedExtensions.exec(file.name)) {
+        alert('Invalid file type! Please upload a .py or .blend file.');
+        event.target.value = ''; // Reset the input
+        return;
+    }
+
+    console.log(`Successfully loaded: ${file.name}`);
+    // Add your dissection logic here!
+});
