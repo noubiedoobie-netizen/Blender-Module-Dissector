@@ -1,10 +1,23 @@
+import base64
 import os
 from pathlib import Path
-from flask import Flask, render_template, request, redirect, url_for, flash
+from flask import Flask, Response, render_template, request, redirect, url_for, flash
+
+# A 1x1 transparent PNG (used as a simple favicon to avoid 404 noise)
+FAVICON_PNG = base64.b64decode(
+    "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAA" 
+    "AAC0lEQVR4nGNgYAAAAAMAAWgmWQ0AAAAASUVORK5CYII="
+)
 
 app = Flask(__name__)
 app.secret_key = os.environ.get("FLASK_SECRET_KEY", "change-this-in-production")
 app.config["MAX_CONTENT_LENGTH"] = 50 * 1024 * 1024  # 50MB max upload size
+
+
+@app.route("/favicon.ico")
+def favicon():
+    """Serve a tiny favicon to prevent 404 logs from browser requests."""
+    return Response(FAVICON_PNG, mimetype="image/png")
 
 
 def parse_blend_header(stream):
