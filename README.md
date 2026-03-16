@@ -1,19 +1,33 @@
 # Blender-Module-Dissector
 
-A lightweight web application designed to analyze and dissect **Blender Python modules** and `.blend` files. This tool provides a clean interface for developers to upload files and extract structural information or metadata.
+A minimal Flask web app for uploading a Blender `.blend` file and inspecting its header metadata (Blender version, pointer size, and endianness).
 
-## 🚀 Features
-* **Modern UI:** Simple, intuitive file upload interface.
-* **Instant Validation:** Real-time checking for compatible Blender file types (`.py`, `.blend`).
-* **Error Handling:** Clear user feedback for missing files or incorrect formats.
-* **Extensible Logic:** Built to be easily integrated with backend processing or complex parsing libraries.
+## ✅ What it does
 
-## 🛠️ How it Works
-1.  **Selection:** The user selects a Blender-related file.
-2.  **Validation:** The frontend script ensures the file extension matches recognized Blender formats.
-3.  **Simulation:** The app extracts the filename and prepares it for "dissection" (parsing).
+- Accepts a `.blend` upload
+- Parses the Blender file header (magic bytes, pointer size, endianness, and version)
+- Displays the extracted metadata in a clean UI
 
-## 📥 Getting Started
-1. Clone the repository.
-2. Open `index.html` in your preferred browser.
-3. Upload a script to see the validator in action.
+## 🚀 Getting Started
+
+### 1) Install dependencies
+
+```bash
+python -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+```
+
+### 2) Run the app
+
+```bash
+python app.py
+```
+
+Then open http://127.0.0.1:5000 in your browser.
+
+## 🧩 Next steps (ideas)
+
+- Parse more structure from `.blend` files (data-block tables, library links, etc.)
+- Add file history / session tracking
+- Add a REST API endpoint for automated inspection
